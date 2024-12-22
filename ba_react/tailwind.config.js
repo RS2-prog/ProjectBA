@@ -7,7 +7,7 @@ module.exports = {
         'sky-25': '#f0f9ff',
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
+        'fade-in': 'fadeIn 0.2s ease-in-out',
       },
       keyframes: {
         fadeIn: {

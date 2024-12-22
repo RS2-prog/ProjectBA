@@ -1,17 +1,69 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import StudentTBody from '../components/StudentTBody'
 import StudentTHead from '../components/StudentTHead'
 import { Student, Detail } from '../types/Student'
+import api from '../api/api'
+import { StudentChoices } from '../types/StudentChoices'
+
+const defaultChoices: StudentChoices = {
+  rank_choices: [],
+  level_range: {min:0, max:0},
+  ex_skill_range: {min:0, max:0},
+  skill_range: {min:0, max:0},
+  equip_range: {min:0, max:0},
+  limit_range: {min:0, max:0},
+  relationship_range: {min:0, max:0},
+}
 
 const StudentPage: React.FC  = () => {
+  // ステート
+  // ローディング
+  const [loading, setLoading] = useState<boolean>(true);
+  // 表示リスト状態
+  const [ownedStudents, setOwnedStudents] = useState<Student[]>([]);
+  const [notOwnedStudents, setNotOwnedStudents] = useState<Student[]>([]);
+  // 選択肢
+  const [choices, setChoices] = useState<StudentChoices>(defaultChoices);
 
-  const originStudents: Student[] = [
-  ];
+  // 所属生徒を取得する
+  const getMyStudents = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/students/register/');
+      const students: Student[] = response.data;
 
-  const [students, setStudents] = useState<Student[]>(originStudents.slice());
+      const [owned, notOwned] = students.reduce<[Student[], Student[]]>(
+        (acc, student) => {
+          if (student.isOwned) {
+            acc[0].push(student);
+          } else {
+            acc[1].push(student);
+          }
+          return acc;
+        },
+        [[], []]
+      );
+      setOwnedStudents(owned);
+      setNotOwnedStudents(notOwned);
 
+      const choicesResponse = await api.get('/students/choices/');
+      const choices: StudentChoices = choicesResponse.data;
+      console.log(choices);
+      setChoices(choices);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getMyStudents();
+  }, []);
+
+  // 所持ソート
   const sortByKey = (key: keyof Student | `detail.${keyof Detail}`, order: string) => {
-    return [...students].sort((a, b) => {
+    return [...ownedStudents].sort((a, b) => {
       const valueA = key.startsWith('detail.') ? a.detail[key.split('.')[1] as keyof Detail] : a[key as keyof Student]; 
       const valueB = key.startsWith('detail.') ? b.detail[key.split('.')[1] as keyof Detail] : b[key as keyof Student]; 
       if (typeof valueA === 'string' && typeof valueB === 'string') {
@@ -33,8 +85,24 @@ const StudentPage: React.FC  = () => {
   };
 
   const handleSortOrderChange = (key: keyof Student | `detail.${keyof Detail}`, order: string) => {
-    setStudents(sortByKey(key, order));
+    setOwnedStudents(sortByKey(key, order));
   };
+
+  // 個別生徒情報更新
+  const updateSingleStudent = async (updatedStudent: Student) => {
+    try {
+      const response = await api.post('/students/update_student/', 
+        { student: updatedStudent }
+      );
+      setOwnedStudents((prev) => 
+        prev.map((student) => (student.detail.id === updatedStudent.detail.id ? updatedStudent : student))
+      );
+    } catch (error) {
+      console.log(error);
+    };
+  };
+
+  if (loading) return <div>Loading...</div>
 
   return (
     <div className='h-[95%] w-[95%] flex m-auto'>
@@ -42,16 +110,19 @@ const StudentPage: React.FC  = () => {
 
       </div>
       <div className='h-full w-4/5 ml-6 overflow-y-auto'>
-        <table className='h-[95%] w-[95%] m-auto border-separate border-spacing-y-2 table-auto overflow-visible'>
+        <table className='h-[95%] w-full m-auto border-separate border-spacing-y-2 table-auto overflow-visible'>
           <thead className='sticky top-0'>
             <StudentTHead onChangeSortConfig={handleSortOrderChange}/>
           </thead>
           <tbody className='space-y-7 w-full'>
-            <StudentTBody student={students[0]}/>
-            <StudentTBody student={students[1]}/>
-            <StudentTBody student={students[2]}/>
-            <StudentTBody student={students[3]}/>
-            <StudentTBody student={students[4]}/>
+            {ownedStudents.map((student, index) => (
+              <StudentTBody
+                key={index}
+                student={student}
+                choices={choices}
+                onConfirm={updateSingleStudent}
+              />
+            ))}
           </tbody>
         </table>
       </div>

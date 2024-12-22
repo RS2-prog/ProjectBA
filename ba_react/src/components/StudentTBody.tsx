@@ -1,120 +1,271 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import EditIcon from '@mui/icons-material/Edit';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { Student } from '../types/Student';
-import Button from './Button';
+import { StudentChoices } from '../types/StudentChoices';
 
 type StudentProps = {
   student: Student;
+  choices: StudentChoices;
+  onConfirm: (updatedStudent: Student) => void;
 };
 
-const StudentTBody: React.FC<StudentProps> = ({ student }) => {
-
+const StudentTBody: React.FC<StudentProps> = ({ student, choices }) => {
+  // ステート
+  // モード状態
   const [dispMode, setDispMode] = useState<boolean>(true);
 
+  // 表示生徒
+  const [thisStudent, setThisStudent] = useState<Student>({...student});
+
+  useEffect(() => {
+    setThisStudent({...student});
+  }, [student]);
+
+  // 表示 -> 編集
   const changeToEditMode = (event: React.MouseEvent<HTMLButtonElement>) => {
     setDispMode(false);
   };
 
+  // 編集 -> 表示
   const changeToDispMode = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setThisStudent(student);
     setDispMode(true);
   };
 
-  // const icons = require.context('./path/to/icons', false, /\.(png|jpe?g|svg)$/);
-  // const iconImage = icons(`./${student.icon_path}`);
-  const iconImage = undefined;
+  // アイコン画像取得
+  const iconPath = `${process.env.PUBLIC_URL}/static/icons/${student.detail.impl_order}.png`;
+
+  // 編集による状態更新(コンポーネント内のみ)
+  const updateStudentField = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const updatedStudent = { ...thisStudent, [event.target.name]: event.target.value };
+    setThisStudent(updatedStudent);
+  }
 
   return (
     <tr className='w-full rounded-lg shadow-md bg-white'>
       <td className='text-center text-gray-600 p-2 h-32'>
-        <img src={iconImage} alt='' className='rounded-md h-full object-contain'/>
+        <img src={iconPath} alt='' className='rounded-md h-full object-contain'/>
       </td>
-      <td className='text-center text-gray-600'>{student.detail.name}</td>
+      <td className='text-center text-gray-600'>{thisStudent.detail.name}</td>
       <td className='text-center text-gray-600'>
         {dispMode
-          ? (student.rank)
-          : (<select name='rank' value={student.rank}></select>)
+          ? (thisStudent.rank)
+          : (<select name='rank' value={thisStudent.rank} onChange={updateStudentField} 
+              className='text-center w-[95%] mx-auto border border-sky-600 outline-none rounded-md'
+            >
+              {choices?.rank_choices.map((choice) => (
+                <option key={choice.value} value={choice.value}>
+                  {choice.label}
+                </option>
+              ))}
+            </select>)
         }
       </td>
       <td className='text-center text-gray-600'>
-      {dispMode
-          ? (student.level)
-          : (<select name='level' value={student.level}></select>)
+        {dispMode
+          ? (thisStudent.level)
+          : (<select name='level' value={thisStudent.level} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.level_range.max - choices.level_range.min + 1 },
+                (_, i) => i + choices.level_range.min
+               ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
         }
       </td>
       <td className='text-center text-gray-600'>
-        {dispMode ? (
-            <div className='flex'>
-              <p className='w-1/4 text-center text-gray-600'>{student.ex}</p>
-              <p className='w-1/4 text-center text-gray-600'>{student.ns}</p>
-              <p className='w-1/4 text-center text-gray-600'>{student.ss}</p>
-              <p className='w-1/4 text-center text-gray-600'>{student.ps}</p>
-            </div>
-          ) : (
-            <div className='flex'>
-              <select className='w-1/4 text-center text-gray-600' name='ex' value={student.ex}></select>
-              <select className='w-1/4 text-center text-gray-600' name='ns' value={student.ns}></select>
-              <select className='w-1/4 text-center text-gray-600' name='ss' value={student.ss}></select>
-              <select className='w-1/4 text-center text-gray-600' name='ps' value={student.ps}></select>
-            </div>
-          )
+        {dispMode 
+          ? (thisStudent.ex) 
+          : (<select name='ex' value={thisStudent.ex} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.ex_skill_range.max - choices.ex_skill_range.min + 1 },
+                (_, i) => i + choices.ex_skill_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
         }
       </td>
       <td className='text-center text-gray-600'>
-        {dispMode ? (
-            <div className='flex'>
-              <p className='w-1/3 text-center text-gray-600'>{student.equip_1}</p>
-              <p className='w-1/3 text-center text-gray-600'>{student.equip_2}</p>
-              <p className='w-1/3 text-center text-gray-600'>{student.equip_3}</p>
-            </div>
-          ) : (
-            <div className='flex'>
-              <select className='w-1/3 text-center text-gray-600' name='equip_1' value={student.equip_1}></select>
-              <select className='w-1/3 text-center text-gray-600' name='equip_2' value={student.equip_2}></select>
-              <select className='w-1/3 text-center text-gray-600' name='equip_3' value={student.equip_3}></select>
-            </div>
-          )
+        {dispMode 
+          ? (thisStudent.ns) 
+          : (<select name='ns' value={thisStudent.ns} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.skill_range.max - choices.skill_range.min + 1 },
+                (_, i) => i + choices.skill_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
         }
       </td>
       <td className='text-center text-gray-600'>
-        {dispMode ? (
-            <div className='flex'>
-              <p className='w-1/3 text-center text-gray-600'>{student.lim_health}</p>
-              <p className='w-1/3 text-center text-gray-600'>{student.lim_attach}</p>
-              <p className='w-1/3 text-center text-gray-600'>{student.lim_heal}</p>
-            </div>
-          ) : (
-            <div className='flex'>
-              <select className='w-1/3 text-center text-gray-600' name='lim_health' value={student.lim_health}></select>
-              <select className='w-1/3 text-center text-gray-600' name='lim_attach' value={student.lim_attach}></select>
-              <select className='w-1/3 text-center text-gray-600' name='lim_heal' value={student.lim_heal}></select>
-            </div>
-          )
+        {dispMode 
+          ? (thisStudent.ss) 
+          : (<select name='ss' value={thisStudent.ss} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.skill_range.max - choices.skill_range.min + 1 },
+                (_, i) => i + choices.skill_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
         }
       </td>
-      <td className='text-center text-gray-600'>{student.relationship}</td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.ps) 
+          : (<select name='ps' value={thisStudent.ps} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.skill_range.max - choices.skill_range.min + 1 },
+                (_, i) => i + choices.skill_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.equip_1) 
+          : (<select name='equip_1' value={thisStudent.equip_1} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.equip_range.max - choices.equip_range.min + 1 },
+                (_, i) => i + choices.equip_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.equip_2) 
+          : (<select name='equip_2' value={thisStudent.equip_2} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.equip_range.max - choices.equip_range.min + 1 },
+                (_, i) => i + choices.equip_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.equip_3) 
+          : (<select name='equip_3' value={thisStudent.equip_3} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.equip_range.max - choices.equip_range.min + 1 },
+                (_, i) => i + choices.equip_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.lim_health) 
+          : (<select name='lim_health' value={thisStudent.lim_health} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.limit_range.max - choices.limit_range.min + 1 },
+                (_, i) => i + choices.limit_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.lim_attach) 
+          : (<select name='lim_attach' value={thisStudent.lim_attach} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.limit_range.max - choices.limit_range.min + 1 },
+                (_, i) => i + choices.limit_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.lim_heal) 
+          : (<select name='lim_heal' value={thisStudent.lim_heal} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.limit_range.max - choices.limit_range.min + 1 },
+                (_, i) => i + choices.limit_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
+      <td className='text-center text-gray-600'>
+        {dispMode 
+          ? (thisStudent.relationship) 
+          : (<select name='relationship' value={thisStudent.relationship} onChange={updateStudentField}>
+              {Array.from(
+                { length: choices.relationship_range.max - choices.relationship_range.min + 1 },
+                (_, i) => i + choices.relationship_range.min
+                ).map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>)
+        }
+      </td>
       <td className='text-center text-gray-600'>
       {dispMode ? (
             <div>
-              <Button
-                text='編集'
+              <button
                 type='button'
                 onClick={changeToEditMode}
-              />
-              <Button
-                text='追加'
-                type='button'
-              />
+              >
+                <EditIcon style={{ color: 'rgb(2 132 199)' }} className='pointer-events-none'/>
+              </button>
             </div>
           ) : (
-            <div>
-              <Button
-                text='保存'
+            <div className='flex place-content-between w-2/3 mx-auto'>
+              <button
                 type='button'
-              />
-              <Button
-                text='取消'
+              >
+                <CheckCircleIcon style={{ color: 'green' }} className='pointer-events-none'/>
+              </button>
+              <button
                 type='button'
                 onClick={changeToDispMode}
-              />
+              >
+                <CancelIcon style={{ color: 'red' }} className='pointer-events-none'/>
+              </button>
             </div>
           )
         }

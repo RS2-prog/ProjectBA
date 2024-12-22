@@ -11,7 +11,7 @@ class RankChoices(models.TextChoices):
   
 class LevelRange:
   MIN = 1
-  MAX = 100
+  MAX = 90
   
 class ExSkillRange:
   MIN = 1
