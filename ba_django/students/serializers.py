@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Student, StudentDtl
-from .choices import RankChoices, LevelRange, SkillRange, EquipRange, ExSkillRange, LimitRange, RelationshipRange
+from .choices import RankChoices, LevelRange, SkillRange, EquipRange, ExSkillRange, LimitRange, RelationshipRange, DamageTypeChoices, ArmorTypeChoices, PositionChoices, RoleChoices, ClassChoices, SchoolChoices
 
 class StudentDtlSerializer(serializers.ModelSerializer):
   class Meta:
@@ -23,6 +23,12 @@ class ChoicesSerializer(serializers.Serializer):
     equip_range = serializers.SerializerMethodField()
     limit_range = serializers.SerializerMethodField()
     relationship_range = serializers.SerializerMethodField()
+    damage_type_choices = serializers.SerializerMethodField()
+    armor_type_choices = serializers.SerializerMethodField()
+    position_choices = serializers.SerializerMethodField()
+    role_choices = serializers.SerializerMethodField()
+    class_choices = serializers.SerializerMethodField()
+    school_choices = serializers.SerializerMethodField()
 
     def get_rank_choices(self, obj):
         return [{"value": choice.value, "label": choice.label} for choice in RankChoices]
@@ -44,3 +50,21 @@ class ChoicesSerializer(serializers.Serializer):
 
     def get_relationship_range(self, obj):
         return {"min": RelationshipRange.MIN, "max": RelationshipRange.MAX}
+    
+    def get_damage_type_choices(self, obj):
+        return [{"value": choice.value, "label": choice.label} for choice in DamageTypeChoices]
+    
+    def get_armor_type_choices(self, obj):
+        return [{"value": choice.value, "label": choice.label} for choice in ArmorTypeChoices]
+    
+    def get_position_choices(self, obj):
+        return [{"value": choice.value, "label": choice.label} for choice in PositionChoices]
+    
+    def get_role_choices(self, obj):
+        return [{"value": choice.value, "label": choice.label} for choice in RoleChoices]
+    
+    def get_class_choices(self, obj):
+        return [{"value": choice.value, "label": choice.label} for choice in ClassChoices]
+    
+    def get_school_choices(self, obj):
+        return [{"value": choice.value, "label": choice.label} for choice in SchoolChoices]

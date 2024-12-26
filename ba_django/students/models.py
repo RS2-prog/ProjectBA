@@ -1,12 +1,18 @@
 from django.db import models
 from accounts.models import Teacher
-from .choices import RankChoices, LevelRange, ExSkillRange, SkillRange, EquipRange, LimitRange, RelationshipRange
+from .choices import RankChoices, LevelRange, ExSkillRange, SkillRange, EquipRange, LimitRange, RelationshipRange, DamageTypeChoices, ArmorTypeChoices, PositionChoices, RoleChoices, ClassChoices, SchoolChoices
 
 class StudentDtl(models.Model):
   impl_order = models.CharField(unique=True, max_length=3)
   name = models.CharField(max_length=15, unique=True)
   wiki_link = models.CharField(max_length=240, null=True, blank=True)
-  
+  damage_type = models.CharField(max_length=1, choices=DamageTypeChoices, default='1')
+  armor_type = models.CharField(max_length=1, choices=ArmorTypeChoices, default='1')
+  position = models.CharField(max_length=1, choices=PositionChoices, default='1')
+  role = models.CharField(max_length=1, choices=RoleChoices, default='1')
+  s_class = models.CharField(max_length=1, choices=ClassChoices, default='1')
+  school = models.CharField(max_length=2, choices=SchoolChoices, default='1')
+
   def __str__(self):
     return self.impl_order + ': ' + self.name
 

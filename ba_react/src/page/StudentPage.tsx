@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import StudentTBody from '../components/StudentTBody'
 import StudentTHead from '../components/StudentTHead'
-import { Student, Detail } from '../types/Student'
+import { Student, Detail, StudentFilter } from '../types/Student'
 import api from '../api/api'
 import { StudentChoices } from '../types/StudentChoices'
 
@@ -13,6 +13,12 @@ const defaultChoices: StudentChoices = {
   equip_range: {min:0, max:0},
   limit_range: {min:0, max:0},
   relationship_range: {min:0, max:0},
+  damage_type_choices: [],
+  armor_type_choices: [],
+  position_choices: [],
+  role_choices: [],
+  class_choices: [],
+  school_choices: [],
 }
 
 const StudentPage: React.FC  = () => {
@@ -24,6 +30,8 @@ const StudentPage: React.FC  = () => {
   const [notOwnedStudents, setNotOwnedStudents] = useState<Student[]>([]);
   // 選択肢
   const [choices, setChoices] = useState<StudentChoices>(defaultChoices);
+  // フィルター
+  const [filter, setFilter] = useState<StudentFilter>();
 
   // 所属生徒を取得する
   const getMyStudents = async () => {
