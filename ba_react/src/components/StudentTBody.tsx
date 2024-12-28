@@ -11,7 +11,7 @@ type StudentProps = {
   onConfirm: (updatedStudent: Student) => void;
 };
 
-const StudentTBody: React.FC<StudentProps> = ({ student, choices }) => {
+const StudentTBody: React.FC<StudentProps> = ({ student, choices, onConfirm }) => {
   // ステート
   // モード状態
   const [dispMode, setDispMode] = useState<boolean>(true);
@@ -21,6 +21,7 @@ const StudentTBody: React.FC<StudentProps> = ({ student, choices }) => {
 
   useEffect(() => {
     setThisStudent({...student});
+    setDispMode(true);
   }, [student]);
 
   // 表示 -> 編集
@@ -42,6 +43,15 @@ const StudentTBody: React.FC<StudentProps> = ({ student, choices }) => {
     const updatedStudent = { ...thisStudent, [event.target.name]: event.target.value };
     setThisStudent(updatedStudent);
   }
+
+  // 更新を確定する
+  const handleConfirm = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (thisStudent === student) {
+      setDispMode(true);
+      return;
+    }
+    onConfirm(thisStudent);
+  };
 
   return (
     <tr className='w-full rounded-lg shadow-md bg-white'>
@@ -249,6 +259,7 @@ const StudentTBody: React.FC<StudentProps> = ({ student, choices }) => {
               <button
                 type='button'
                 onClick={changeToEditMode}
+                className='active:scale-95 transition-transform'
               >
                 <EditIcon style={{ color: 'rgb(2 132 199)' }} className='pointer-events-none'/>
               </button>
@@ -257,14 +268,17 @@ const StudentTBody: React.FC<StudentProps> = ({ student, choices }) => {
             <div className='flex place-content-between w-2/3 mx-auto'>
               <button
                 type='button'
+                onClick={handleConfirm}
+                className='active:scale-95 transition-transform'
               >
-                <CheckCircleIcon style={{ color: 'green' }} className='pointer-events-none'/>
+                <CheckCircleIcon style={{ color: '#81C784' }} className='pointer-events-none'/>
               </button>
               <button
                 type='button'
                 onClick={changeToDispMode}
+                className='active:scale-95 transition-transform'
               >
-                <CancelIcon style={{ color: 'red' }} className='pointer-events-none'/>
+                <CancelIcon style={{ color: '#E57373' }} className='pointer-events-none'/>
               </button>
             </div>
           )

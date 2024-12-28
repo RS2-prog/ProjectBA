@@ -79,7 +79,7 @@ class UpdateStudentView(APIView):
       return Response({"error": "Invalid request data"}, status=400)
     
     try:
-      student = Student.objects.get(teacher=user, detail__id=student_data.detail.id)
+      student = Student.objects.get(teacher=user, detail__id=student_data['detail']['id'])
     except Student.DoesNotExist:
       return Response({"error": "該当生徒のデータが見つかりませんでした"}, status=400)
     
