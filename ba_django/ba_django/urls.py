@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('students/', include('students.urls')),
+    path('helpers/', include('he1pers.urls')),
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ]

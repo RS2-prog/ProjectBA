@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'accounts.apps.AccountsConfig',
     'students.apps.StudentsConfig',
+    'he1pers.apps.He1PersConfig',
 ]
 
 MIDDLEWARE = [

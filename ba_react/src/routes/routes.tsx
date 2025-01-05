@@ -6,8 +6,17 @@ import RequireAuth from "./RequireAuth";
 import StudentPage from "../page/StudentPage";
 import TempPage from "../page/TempPage";
 import StudentRegisterPage from "../page/StudentRegisterPage";
+import HelperSettingPage from "../page/HelperSettingPage";
 
 const routes: RouteObject[] = [
+  {
+    path: '/suketto/setting',
+    element: (
+      <RequireAuth redirectTo="/login">
+        <HelperSettingPage />
+      </RequireAuth>
+    ),
+  },
   {
     path: '/mystudents/register',
     element: (

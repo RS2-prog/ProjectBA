@@ -37,3 +37,9 @@ export type StudentFilter = {
   s_class: string | null;
   school: string | null;
 };
+
+export type HelperStudent = {
+  student: Student;
+  content: string;
+  sort_no: number;
+};
