@@ -1,16 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { HelperStudent } from '../types/Student';
 import Button from './Button';
 
 type HelperFrameProps = {
   title: string;
   helpers: HelperStudent[];
+  onClick: (helper: HelperStudent) => void;
 };
 
-const undefinedImplOrder: string = '000';
-const undefinedName: string = '未設定';
 
-const HelperFrame: React.FC<HelperFrameProps> = ({ title, helpers }) => {
+const HelperFrame: React.FC<HelperFrameProps> = ({ title, helpers, onClick }) => {
 
   return (
     <div className='h-[85%] my-auto flex-none w-[31%] bg-white rounded-lg shadow-lg ml-9'>
@@ -32,6 +31,7 @@ const HelperFrame: React.FC<HelperFrameProps> = ({ title, helpers }) => {
               <Button
                 text='設定'
                 type='button'
+                onClick={() => onClick(helper)}
               />
             </div>
           </div>

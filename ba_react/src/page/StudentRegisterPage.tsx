@@ -155,7 +155,8 @@ const StudentRegisterPage = () => {
             <div className='grid grid-cols-6 auto-rows-[160px] overflow-y-scroll flex-1 p-4 gap-4 bg-white'>
               {ownedStudents.map((student) => (
                 <StudentNode 
-                  student={student} 
+                  student={student}
+                  isSelected={false}
                   onClick={handleMoveOwnedStudent}
                 />
               ))}
@@ -173,6 +174,7 @@ const StudentRegisterPage = () => {
               {notOwnedStudents.map((student) => (
                 <StudentNode 
                   student={student} 
+                  isSelected={false}
                   onClick={handleMoveNotOwnedStudent}
                 />
               ))}
