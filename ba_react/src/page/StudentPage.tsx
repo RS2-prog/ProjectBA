@@ -6,6 +6,7 @@ import api from '../api/api'
 import { StudentChoices } from '../types/StudentChoices'
 import SelectFilter from '../components/SelectFilter'
 import FuncButton from '../components/FuncButton'
+import { useError } from '../context/ErrorContext'
 
 const defaultChoices: StudentChoices = {
   rank_choices: [],
@@ -44,6 +45,8 @@ const StudentPage: React.FC  = () => {
   const [choices, setChoices] = useState<StudentChoices>(defaultChoices);
   // フィルター
   const [filter, setFilter] = useState<StudentFilter>(defaultFilter);
+  // エラー管理
+  const {addError} = useError();
 
   // 所属生徒を取得する
   const getMyStudents = async () => {
@@ -71,7 +74,7 @@ const StudentPage: React.FC  = () => {
       const choices: StudentChoices = choicesResponse.data;
       setChoices(choices);
     } catch (error) {
-      console.log(error);
+      addError("生徒情報の取得に失敗しました。");
     } finally {
       setLoading(false);
     }

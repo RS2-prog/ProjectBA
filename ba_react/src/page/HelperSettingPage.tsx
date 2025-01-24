@@ -82,8 +82,6 @@ const HelperSettingPage: React.FC = () => {
 
   // 助っ人設定
   const setHelper = async() => {
-    console.log(selectedStudent);
-    console.log(helperToSet);
     if (selectedStudent === null && (helperToSet === null ||  helperToSet?.student.detail.id === -1)) {
       switchStudentSelector();
       return;
@@ -95,6 +93,7 @@ const HelperSettingPage: React.FC = () => {
         { helper: newHelper }
       );
       switchStudentSelector();
+      getHelperSettings();
     } catch (error) {
       console.log(error);
     } finally {

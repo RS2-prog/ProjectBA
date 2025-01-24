@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
+from students.models import Student
 from .models import HelperStudent
 from .serializers import ChoicesSerializer, HelperStudentSerializer
 
@@ -36,6 +38,24 @@ class HelperSettingView(APIView):
     content_data = helper_data.get('content')
     sort_no_data = helper_data.get('sort_no')
     
-    print(student_data, content_data, sort_no_data)
+    # 有効な生徒かを確認
+    try:
+      if not student_data or 'id' not in student_data:
+        raise Student.DoesNotExist
+      exist_student = Student.objects.get(id = student_data.get('id'))
+      if exist_student.teacher != user:
+        return Response({"error": "Invalid request data"}, status=400)
+    except Student.DoesNotExist:
+      HelperStudent.objects.filter(content=content_data, sort_no=sort_no_data).delete()
+      return Response({"result": "success"}, status=200)
+    
+    HelperStudent.objects.filter(student=exist_student).delete()
+    HelperStudent.objects.filter(content=content_data, sort_no=sort_no_data).delete()
+    new_helper = HelperStudent(
+      student=exist_student,
+      content=content_data,
+      sort_no=sort_no_data
+    )
+    new_helper.save()
     
     return Response({"result": "success"}, status=200)

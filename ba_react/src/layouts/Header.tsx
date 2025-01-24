@@ -5,6 +5,11 @@ import SearchBarH from "./SearchBarH";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+const tabs = [
+  {path: "/top", label: "トップ"},
+  {path: "/mystudents", label: "生徒"},
+  {path: "/suketto", label: "助っ人"},
+]
 
 const Header = () => {
 
@@ -20,13 +25,12 @@ const Header = () => {
     navigate('/login');
   };
 
-  const [selected, setSelected] = useState<string>('tab1');
   const [searchValue, setSearchValue] = useState<string>('');
   const [contentValue, setContentValue] = useState<string>('a');
 
   const handleSelected = (event: React.MouseEvent<HTMLButtonElement>)  => {
     if (event.target instanceof HTMLButtonElement) {
-      setSelected(event.target.name);
+      navigate(event.target.name);
     }
   };
 
@@ -65,24 +69,14 @@ const Header = () => {
       </div>
       <div className="w-full bg-sky-200 mt-3">
         <div className="flex w-11/12 m-auto">
-          <TabButton
-            name='tab1'
-            text='トップ'
-            selected={selected}
-            onClick={handleSelected}
-          />
-          <TabButton
-            name='tab2'
-            text='生徒'
-            selected={selected}
-            onClick={handleSelected}
-          />
-          <TabButton
-            name='tab3'
-            text='助っ人'
-            selected={selected}
-            onClick={handleSelected}
-          />
+          {tabs.map((tab, index) => (
+            <TabButton
+              key={index}
+              path={tab.path}
+              label={tab.label}
+              onClick={handleSelected}
+            />
+          ))}
         </div>
       </div>  
     </header>

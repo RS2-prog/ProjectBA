@@ -33,3 +33,6 @@ class Student(models.Model):
   lim_heal = models.IntegerField(choices=[(i, str(i)) for i in range(LimitRange.MAX, LimitRange.MIN + 1)], default=0)
   relationship = models.IntegerField(choices=[(i, str(i)) for i in range(RelationshipRange.MAX, RelationshipRange.MIN + 1)], default=1)
   isOwned = models.BooleanField(default=False)
+
+  def __str__(self):
+    return self.teacher.username + ':' + self.detail.name

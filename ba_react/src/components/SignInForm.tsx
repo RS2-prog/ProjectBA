@@ -26,7 +26,7 @@ const SignInForm = () => {
       const response = await api.post<LoginResponse>('/accounts/login/', { email, password });
       const access = response.data.access;
       localStorage.setItem('access', access);
-      window.location.href = '/home';
+      window.location.href = '/mystudents';
     } catch (error) {
       alert('ログインに失敗しました');
     }

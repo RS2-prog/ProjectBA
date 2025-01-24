@@ -56,6 +56,7 @@ api.interceptors.response.use(
         } catch (refreshError) {
           isRefreshing = false;
           refreshSubscribers = [];
+          localStorage.removeItem('access');
           window.location.href = '/login'; 
           return Promise.reject(refreshError);
         }

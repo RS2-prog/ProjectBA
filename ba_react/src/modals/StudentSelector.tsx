@@ -35,6 +35,7 @@ const StudentSelector: React.FC<StudentSelectorProps> = ({ isOpen, students, onC
     if (isOpen) {
       setFilterParam('');
       setSelectedStudent(null);
+      onSelect(null);
       setInitialized(true);
     } else {
       setInitialized(false);
