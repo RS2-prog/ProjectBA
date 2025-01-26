@@ -4,6 +4,7 @@ import api from '../api/api';
 import { HelperStudent, Student } from '../types/Student';
 import { TextChoice } from '../types/StudentChoices';
 import StudentSelector from '../modals/StudentSelector';
+import { useError } from '../context/ErrorContext';
 
 interface HelpersResponse {
   contents: {
@@ -35,6 +36,8 @@ const HelperSettingPage: React.FC = () => {
   const [helperToSet, setHelperToSet] = useState<HelperStudent | null>(null);
   // 選択された生徒
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  // エラー管理
+  const {addError} = useError();
   
   
   // 助っ人設定を取得する
@@ -70,7 +73,7 @@ const HelperSettingPage: React.FC = () => {
       setStudents(students);
 
     } catch (error) {
-      console.log(error);
+      addError("助っ人設定の取得に失敗しました");
     } finally {
       setLoading(false);
     }
@@ -95,7 +98,7 @@ const HelperSettingPage: React.FC = () => {
       switchStudentSelector();
       getHelperSettings();
     } catch (error) {
-      console.log(error);
+      addError("助っ人の設定に失敗しました");
     } finally {
       setLoading(false);
     }

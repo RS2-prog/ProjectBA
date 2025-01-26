@@ -44,6 +44,7 @@ class Teacher(AbstractBaseUser, PermissionsMixin):
                                  ],
                                 null=True, blank=True, verbose_name="フレンドコード")
   is_staff = models.BooleanField(default=False, verbose_name='スタッフフラグ')
+  friend_code = models.CharField(max_length=8, null=True, blank=True)
   
   USERNAME_FIELD = "email"
   REQUIRED_FIELDS = ["username"]

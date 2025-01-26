@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const tabs = [
   {path: "/top", label: "トップ"},
   {path: "/mystudents", label: "生徒"},
-  {path: "/suketto", label: "助っ人"},
+  {path: "/suketto/setting", label: "助っ人"},
 ]
 
 const Header = () => {

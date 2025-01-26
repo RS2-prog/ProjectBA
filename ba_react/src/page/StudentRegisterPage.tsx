@@ -7,6 +7,7 @@ import FuncButton from '../components/FuncButton';
 import ConfirmModal from '../modals/ConfirmModal';
 import { AnyFunction } from '../types/AnyFunction';
 import AlertModal from '../modals/AlertModal';
+import { useError } from '../context/ErrorContext';
 
 const StudentRegisterPage = () => {
   // ステート
@@ -24,6 +25,8 @@ const StudentRegisterPage = () => {
   const [alertMessage, setAlertMessage] = useState<string>('');
   // 変更状態
   const [changes, setChanges] = useState<Student[]>([]);
+  // エラー管理
+  const {addError} = useError();
  
   // 所属、未所属生徒を取得する
   const getMyStudents = async () => {
@@ -46,7 +49,7 @@ const StudentRegisterPage = () => {
       setOwnedStudents(owned);
       setNotOwnedStudents(notOwned);
     } catch (error) {
-      console.log(error);
+      addError("生徒リストの取得に失敗しました");
     } finally {
       setLoading(false);
     }
@@ -118,7 +121,7 @@ const StudentRegisterPage = () => {
       setAlertMessage('変更を保存しました');
       setIsAlertModalOpen(true);
     } catch (error) {
-      console.log(error);
+      addError("変更の保存に失敗しました");
     } finally {
       setLoading(false);
     }

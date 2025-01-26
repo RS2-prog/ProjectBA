@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Input from './Input'
 import Button from './Button';
 import api from '../api/api';
+import { useError } from '../context/ErrorContext';
 
 interface LoginResponse {
   access: string;
@@ -11,6 +12,9 @@ const SignInForm = () => {
   
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  // エラー管理
+  const {addError} = useError();
 
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -28,7 +32,7 @@ const SignInForm = () => {
       localStorage.setItem('access', access);
       window.location.href = '/mystudents';
     } catch (error) {
-      alert('ログインに失敗しました');
+      addError('ログインに失敗しました');
     }
   };
 
