@@ -1,8 +1,12 @@
 import json
 from django.http import JsonResponse
+from django.db.models import Q 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import get_authorization_header
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from students.models import Student
 from .models import HelperStudent
@@ -59,3 +63,39 @@ class HelperSettingView(APIView):
     new_helper.save()
     
     return Response({"result": "success"}, status=200)
+
+# 助っ人検索
+class HelperSearchView(APIView):
+
+  permission_classes = [AllowAny]
+
+  def get(self, request):
+    user = None  
+
+    auth_header = get_authorization_header(request).decode('utf-8')
+    if auth_header:
+      if auth_header.startswith('Bearer '):
+        token = auth_header.split(' ')[1]
+        try:
+          validated_user = JWTAuthentication().authenticate(request)
+          if validated_user:
+            user = validated_user[0]
+        except AuthenticationFailed as e:
+          return JsonResponse({'detail': 'Invalid or expired token'}, status=401)
+
+      contentParm = request.get('content')
+      nameParm = request.get('name')
+
+      if user:
+        helpers_data = HelperStudent.objects.filter(~Q(student__teacher=user), content=contentParm)
+      else:
+        helpers_data = HelperStudent.objects.filter(content=contentParm)
+
+      helpers = HelperStudentSerializer(helpers_data, many=True).data
+      # contents = ChoicesSerializer({}).data
+
+      response = {
+          'helpers': helpers,
+          #'contents': contents,
+      }
+      return JsonResponse(response, safe=False)

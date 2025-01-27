@@ -7,6 +7,7 @@ import StudentPage from "../page/StudentPage";
 import TempPage from "../page/TempPage";
 import StudentRegisterPage from "../page/StudentRegisterPage";
 import HelperSettingPage from "../page/HelperSettingPage";
+import HelperSearchPage from "../page/HeperSearchPage";
 
 const routes: RouteObject[] = [
   {
@@ -40,6 +41,10 @@ const routes: RouteObject[] = [
         <LoginPage />
       </RedirectIfLoggedIn>
     ),
+  },
+  {
+    path: '/suketto/search',
+    element: <HelperSearchPage/>,
   },
   {
     path: '*',

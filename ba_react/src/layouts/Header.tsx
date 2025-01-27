@@ -42,6 +42,10 @@ const Header = () => {
     setContentValue(event.target.value);
   }
 
+  const handleSearchClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    navigate(`/suketto/search?name=${searchValue}&content=${contentValue}`);
+  }
+
   return (
     <header className="w-full h-28 pt-3 border-b-2 boder-sky-200 sticky flex flex-col bg-sky-50 shrink-0 top-0">
       <div className="flex w-11/12 m-auto place-content-between">
@@ -54,11 +58,12 @@ const Header = () => {
           searchValue={searchValue}
           onContentChange={handleContentValue}
           onSearchChange={handleSearchValue}
+          onClick={handleSearchClick}
         >
-          <option value="a" className="text-center text-gray-600">総力戦/大決戦</option>
-          <option value="b" className="text-center text-gray-600">合同火力演習</option>
-          <option value="c" className="text-center text-gray-600">占領戦</option>
-          <option value="d" className="text-center text-gray-600">制約解除決戦</option>
+          <option value="1" className="text-center text-gray-600">総力戦/大決戦</option>
+          <option value="2" className="text-center text-gray-600">合同火力演習</option>
+          <option value="3" className="text-center text-gray-600">占領戦</option>
+          <option value="4" className="text-center text-gray-600">制約解除決戦</option>
         </SearchBarH>
         {isLoggedIn? (
           <Button text='ログアウト' type='button' onClick={handleLogout}/>
