@@ -83,8 +83,8 @@ class HelperSearchView(APIView):
         except AuthenticationFailed as e:
           return JsonResponse({'detail': 'Invalid or expired token'}, status=401)
 
-      contentParm = request.get('content')
-      nameParm = request.get('name')
+      contentParm = request.GET.get('content')
+      nameParm = request.GET.get('name')
 
       if user:
         helpers_data = HelperStudent.objects.filter(~Q(student__teacher=user), content=contentParm)

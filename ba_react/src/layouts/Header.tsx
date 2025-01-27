@@ -26,7 +26,7 @@ const Header = () => {
   };
 
   const [searchValue, setSearchValue] = useState<string>('');
-  const [contentValue, setContentValue] = useState<string>('a');
+  const [contentValue, setContentValue] = useState<string>('1');
 
   const handleSelected = (event: React.MouseEvent<HTMLButtonElement>)  => {
     if (event.target instanceof HTMLButtonElement) {
@@ -42,8 +42,14 @@ const Header = () => {
     setContentValue(event.target.value);
   }
 
-  const handleSearchClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    navigate(`/suketto/search?name=${searchValue}&content=${contentValue}`);
+  const handleSearchClick = () => {
+    const url = `/suketto/search?name=${searchValue}&content=${contentValue}`;
+    const curl = window.location.pathname + window.location.search;
+    if (url === curl) {
+      window.location.reload();
+    } else {
+      navigate(url);
+    }
   }
 
   return (
