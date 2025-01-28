@@ -175,7 +175,8 @@ const HelperTHead: React.FC<HelperTHeadProps> = ({ onChangeSortConfig }) => {
       <th className='text-gray-600 w-[110px]'>WB攻撃力<SortButton onClick={onSortLimAttach} order={orderOfLimAttach}/></th>
       <th className='text-gray-600 w-[110px]'>WB回復力<SortButton onClick={onSortLimHeal} order={orderOfLimHeal}/></th>
       <th className='text-gray-600 w-[100px]'>絆ランク<SortButton onClick={onSortRelationship} order={orderOfRelationship}/></th>
-      <th className='text-gray-600'></th>
+      <th className='text-gray-600 w-[100px]'>先生</th>
+      <th className='text-gray-600 w-[100px]'>フレンドコード</th>
     </tr>
   )
 }

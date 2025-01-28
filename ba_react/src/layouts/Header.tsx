@@ -1,18 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "../components/Button";
 import TabButton from "./TabButton";
 import SearchBarH from "./SearchBarH";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 const tabs = [
   {path: "/top", label: "トップ"},
   {path: "/mystudents", label: "生徒"},
   {path: "/suketto/setting", label: "助っ人"},
-]
+];
 
 const Header = () => {
-
+  // ログイン状態管理
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   if (!authContext) {
@@ -20,20 +21,27 @@ const Header = () => {
   }
   const { isLoggedIn, logout } = authContext;
 
+  // ログアウト処理
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
+  // 状態管理
+  // 検索パラメータ
   const [searchValue, setSearchValue] = useState<string>('');
   const [contentValue, setContentValue] = useState<string>('1');
+  // 検索サジェスト
+  const [suggestNames, setSuggestNames] = useState<string[]>([]);
 
+  // タブ選択
   const handleSelected = (event: React.MouseEvent<HTMLButtonElement>)  => {
     if (event.target instanceof HTMLButtonElement) {
       navigate(event.target.name);
     }
   };
 
+  // 検索変更、実行
   const handleSearchValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   }
@@ -52,6 +60,21 @@ const Header = () => {
     }
   }
 
+  // サジェスト取得
+  const getStudentNames = async () => {
+    try {
+      const response = await api.get('/students/get_student_names/');
+      console.log(response.data)
+      setSuggestNames(response.data);
+    } catch (error) {
+      console.log("サジェストの取得に失敗しました");
+    }
+  }
+
+  useEffect(() => {
+    getStudentNames();
+  }, []);
+
   return (
     <header className="w-full h-28 pt-3 border-b-2 boder-sky-200 sticky flex flex-col bg-sky-50 shrink-0 top-0">
       <div className="flex w-11/12 m-auto place-content-between">
@@ -62,6 +85,7 @@ const Header = () => {
         <SearchBarH
           contentValue={contentValue}
           searchValue={searchValue}
+          suggestions={suggestNames}
           onContentChange={handleContentValue}
           onSearchChange={handleSearchValue}
           onClick={handleSearchClick}

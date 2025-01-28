@@ -72,7 +72,7 @@ const HeperSearchPage: React.FC = () => {
     <div className='h-[95%] w-[95%] flex m-auto'>
       <div className='h-full w-full overflow-y-auto'>
         <table className='w-full m-auto border-separate border-spacing-y-2 table-auto overflow-visible'>
-          <thead className='sticky top-0'>
+          <thead className='top-0'>
             <HelperTHead
               onChangeSortConfig={handleSortOrderChange}
             />

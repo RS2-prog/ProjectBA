@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .models import Student
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from .models import Student, StudentDtl
 from .service import setupMyStudents
 from .serializers import StudentSerializer, ChoicesSerializer
 
@@ -88,3 +88,11 @@ class UpdateStudentView(APIView):
       serializer.save()
       return Response({"result": "success"}, status=200)
     return Response(serializer.errors, status=400)
+  
+# サジェスト用生徒名前リスト取得
+class GetStudentSuggestionView(APIView):
+  permission_classes = [AllowAny]
+
+  def get(self, request):
+    all_names = StudentDtl.objects.values_list('name', flat=True)
+    return Response(all_names)

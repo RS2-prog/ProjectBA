@@ -42,4 +42,6 @@ export type HelperStudent = {
   student: Student;
   content: string;
   sort_no: number;
+  friend_code?: string;
+  teacher_name?: string;
 };
