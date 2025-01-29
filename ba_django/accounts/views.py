@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from django.contrib.auth import authenticate
@@ -81,3 +82,32 @@ class RegisterView(APIView):
         
         except ValidationError as e:
             return Response({'errors': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
+
+class TeacherDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        responseData = {
+            "username": user.username,
+            "friend_code": user.friend_code,
+        }
+
+        return Response(responseData, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        user = request.user
+        data = request.data
+
+        if "username" in data:
+            user.username = data["username"]
+
+        if "friend_code" in data:
+            user.friend_code = data["friend_code"]
+
+        try:
+            user.save()
+            return Response(status=status.HTTP_200_OK)
+        except ValidationError as e:
+            return Response(e.message_dict, status=status.HTTP_400_BAD_REQUEST)

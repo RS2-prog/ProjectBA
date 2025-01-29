@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 
 const tabs = [
-  {path: "/top", label: "トップ"},
+  {path: "/sensei", label: "先生"},
   {path: "/mystudents", label: "生徒"},
   {path: "/suketto/setting", label: "助っ人"},
 ];
@@ -76,7 +76,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="w-full h-28 pt-3 border-b-2 boder-sky-200 sticky flex flex-col bg-sky-50 shrink-0 top-0">
+    <header className="w-full h-28 pt-3 border-b-2 boder-sky-200 sticky flex flex-col bg-sky-50 shrink-0 top-0 z-50">
       <div className="flex w-11/12 m-auto place-content-between">
         <div className="flex">
           <p className="text-sky-600 font-extrabold text-3xl italic">Blue</p>

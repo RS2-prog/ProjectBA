@@ -229,8 +229,8 @@ const StudentPage: React.FC  = () => {
         
       </div>
       <div className='h-full w-4/5 ml-6 overflow-y-auto'>
-        <table className='w-full m-auto border-separate border-spacing-y-2 table-auto overflow-visible'>
-          <thead className='sticky top-0 z-0'>
+        <table className='relative z-10 w-full m-auto border-separate border-spacing-y-2 table-auto overflow-visible'>
+          <thead className='sticky top-0'>
             <StudentTHead onChangeSortConfig={handleSortOrderChange}/>
           </thead>
           <tbody className='h-auto'>

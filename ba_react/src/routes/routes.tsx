@@ -8,8 +8,17 @@ import TempPage from "../page/TempPage";
 import StudentRegisterPage from "../page/StudentRegisterPage";
 import HelperSettingPage from "../page/HelperSettingPage";
 import HelperSearchPage from "../page/HelperSearchPage";
+import TeacherPage from "../page/TeacherPage";
 
 const routes: RouteObject[] = [
+  {
+    path: '/sensei',
+    element: (
+      <RequireAuth redirectTo="/login">
+        <TeacherPage />
+      </RequireAuth>
+    ),
+  },
   {
     path: '/suketto/setting',
     element: (

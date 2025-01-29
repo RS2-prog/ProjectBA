@@ -50,7 +50,7 @@ const Input: React.FC<InputProps> = ({ type, name, disabled = false, value, plac
   const errorMessage = errors[name] ? errors[name][0] : null;
   
   return (
-    <div className='relative border-gray-200 border rounded-md transition-all duration-300 focus-within:border-blue-500'>
+    <div className='relative border-gray-200 border rounded-md transition-all duration-300 focus-within:border-blue-500 h-full w-full'>
       <div className='relative'>
         <input
           ref={inputRef}

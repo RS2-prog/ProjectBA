@@ -90,6 +90,9 @@ class HelperSearchView(APIView):
         helpers_data = HelperStudent.objects.filter(~Q(student__teacher=user), content=contentParm)
       else:
         helpers_data = HelperStudent.objects.filter(content=contentParm)
+      
+      if nameParm is not None and nameParm.strip() != "":
+        helpers_data = helpers_data.filter(student__detail__name=nameParm.strip())
 
       helpers = HelperStudentSerializer(helpers_data, many=True).data
       # contents = ChoicesSerializer({}).data
